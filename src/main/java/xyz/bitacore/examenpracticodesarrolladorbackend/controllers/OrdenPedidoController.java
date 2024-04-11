@@ -3,13 +3,11 @@ package xyz.bitacore.examenpracticodesarrolladorbackend.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import xyz.bitacore.examenpracticodesarrolladorbackend.dtos.EstadoPedidoDTO;
 import xyz.bitacore.examenpracticodesarrolladorbackend.dtos.OrdenPedidoDTO;
 import xyz.bitacore.examenpracticodesarrolladorbackend.dtos.OrdenPedidoItemsDTO;
 import xyz.bitacore.examenpracticodesarrolladorbackend.entities.*;
-import xyz.bitacore.examenpracticodesarrolladorbackend.repositories.IOrdenPedidoItemsRepository;
-import xyz.bitacore.examenpracticodesarrolladorbackend.repositories.IProductoRepository;
-import xyz.bitacore.examenpracticodesarrolladorbackend.repositories.IStockResumenRepository;
-import xyz.bitacore.examenpracticodesarrolladorbackend.repositories.ISucursalRepository;
+import xyz.bitacore.examenpracticodesarrolladorbackend.repositories.*;
 import xyz.bitacore.examenpracticodesarrolladorbackend.serviceinterfaces.IOrdenPedidoService;
 
 import java.time.LocalDate;
@@ -37,6 +35,59 @@ public class OrdenPedidoController {
 
     @Autowired
     private IStockResumenRepository stockResumenRepository;
+
+    @Autowired
+    private IOrdenPedidoRepository ordenPedidoRepository;
+    @Autowired
+    private IOrdenPedidosEvaluadoresRepository ordenPedidosEvaluadoresRepository;
+
+    @PatchMapping("/actualizar-estado-pendiente-evaluacion/{id-orden-pedido}")
+    public void cambiarEstado(@PathVariable("id-orden-pedido")Integer idOrdenPedido){
+        // Validar que la orden de pedido exista
+        if (ordenPedidoRepository.existsOrdenPedidoByIdOrdenPedido(idOrdenPedido) == false) {
+            throw new IllegalArgumentException("La orden de pedido no existe");
+        }
+
+        // Obtener la orden de pedido
+        OrdenPedido ordenPedido = myService.listId(idOrdenPedido);
+
+        // Validar el estado del pedido solo si tiene el estado "1"=“Borrador”.
+        if (ordenPedido.getEstadoPedido().getIdEstadoPedido() != 1) {
+            throw new IllegalArgumentException("El estado del pedido solo puede ser cambiado si es 'Borrador'");
+        }
+
+        // Crear orden de pedido evaluadores con id de la orden de pedido y el usuario correspondiente (asignado aleatoriamente)
+        // Paso 1: Calcular el usuario
+        /*
+        IdUsuario	Nombre  Rango de importe total en la orden
+        1	Marco Silverio 1-5000
+        2	Luis Almeyda  1-5000
+        3	Ivan Moran 1-5000
+        4	Ibarra   5001-10000
+        5	Perlacios   5001-10000
+        6	Ortiz   > 10000
+        7	Eche    > 10000
+        */
+        OrdenPedidosEvaluadores ordenPedidosEvaluadores = new OrdenPedidosEvaluadores();
+        Usuario usuario = new Usuario();
+        if (ordenPedido.getTotal() >= 1 && ordenPedido.getTotal() <= 5000) {
+            usuario.setIdUsuario(1 + (int)(Math.random() * 3));
+        } else if (ordenPedido.getTotal() >= 5001 && ordenPedido.getTotal() <= 10000) {
+            usuario.setIdUsuario(4 + (int)(Math.random() * 2));
+        } else if (ordenPedido.getTotal() > 10000) {
+            usuario.setIdUsuario(6 + (int)(Math.random() * 2));
+        }
+        ordenPedidosEvaluadores.setUsuario(usuario);
+
+        // Actualizar el estado de la orden de pedido a "2"="Pendiente de evaluación"
+        EstadoPedido estadoPedido = new EstadoPedido();
+        estadoPedido.setIdEstadoPedido(2);
+        ordenPedido.setEstadoPedido(estadoPedido);
+
+        // Guardar en DB
+        myService.insert(ordenPedido);
+        ordenPedidosEvaluadoresRepository.save(ordenPedidosEvaluadores);
+    }
 
     @PostMapping("/crear-orden-items-asociados")
     public void crearOrdenPedido(@RequestParam int idVendedor, @RequestParam int idFormaPago, @RequestParam int idSucursal, @RequestParam int diasCredito, @RequestParam String observaciones, @RequestParam int idCliente, @RequestBody List<OrdenPedidoItemsDTO> ordenPedidoItemsDTOList) {
