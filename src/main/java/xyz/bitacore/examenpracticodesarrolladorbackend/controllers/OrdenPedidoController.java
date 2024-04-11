@@ -2,6 +2,8 @@ package xyz.bitacore.examenpracticodesarrolladorbackend.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import xyz.bitacore.examenpracticodesarrolladorbackend.dtos.EstadoPedidoDTO;
 import xyz.bitacore.examenpracticodesarrolladorbackend.dtos.OrdenPedidoDTO;
@@ -39,6 +41,22 @@ public class OrdenPedidoController {
     private IOrdenPedidosEvaluadoresRepository ordenPedidosEvaluadoresRepository;
     @Autowired
     private IUsuarioRepository usuarioRepository;
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    private void sendEmail(String codigoPedido) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo("msilverio@bitacore.xyz");
+        String subjectString = "Pedido Aprobado Correctamente : " + codigoPedido;
+        message.setSubject(subjectString);
+        message.setText("This is a test email sent from Spring Boot.");
+
+        try {
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException("Action correctly done but could not send email. Verify the application properties email credentials.", e);
+        }
+    }
 
     // Evaluar un pedido
     @PutMapping("/evaluar-pedido/{id-usuario}")
@@ -102,7 +120,8 @@ public class OrdenPedidoController {
                 ordenPedido.setEstadoPedido(estadoPedido);
                 myService.insert(ordenPedido);
 
-                // Enviar un correo a cfmorenofernandez@gmail.com
+                // Enviar correo
+                sendEmail(ordenPedido.getCodigo());
 
             }
             // Si es desaprobado, asignar el estado de la misma orden a "4"="Desaprobado"
@@ -138,6 +157,9 @@ public class OrdenPedidoController {
                     estadoPedido.setIdEstadoPedido(3);
                     ordenPedido.setEstadoPedido(estadoPedido);
                     myService.insert(ordenPedido);
+
+                    // Enviar correo
+                    sendEmail(ordenPedido.getCodigo());
                 }
             }
         }
