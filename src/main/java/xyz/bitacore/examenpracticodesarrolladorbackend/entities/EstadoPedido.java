@@ -10,7 +10,7 @@ public class EstadoPedido {
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private int idEstadoPedido;
 
-@Column(name = "descripcion", nullable = false)
+@Column(name = "descripcion")
 private String descripcion;
 
 public EstadoPedido() { }

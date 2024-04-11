@@ -13,25 +13,26 @@ public class OrdenPedidosEvaluadoresServiceImplement implements IOrdenPedidosEva
     @Autowired
     private IOrdenPedidosEvaluadoresRepository myRepository;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @Override
     public void insert(OrdenPedidosEvaluadores OrdenPedidosEvaluadores) {
         myRepository.save(OrdenPedidosEvaluadores);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @Override
     public void delete(int idOrdenPedidosEvaluadores){
         myRepository.deleteById(idOrdenPedidosEvaluadores);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @Override
     public OrdenPedidosEvaluadores listId(int idOrdenPedidosEvaluadores){
         return myRepository.findById(idOrdenPedidosEvaluadores).orElse(new OrdenPedidosEvaluadores());
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @Override
     public List<OrdenPedidosEvaluadores> list() {
         return myRepository.findAll();

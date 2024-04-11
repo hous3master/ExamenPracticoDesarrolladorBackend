@@ -13,25 +13,26 @@ public class UsuarioServiceImplement implements IUsuarioService {
     @Autowired
     private IUsuarioRepository myRepository;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @Override
     public void insert(Usuario Usuario) {
         myRepository.save(Usuario);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @Override
     public void delete(int idUsuario){
         myRepository.deleteById(idUsuario);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @Override
     public Usuario listId(int idUsuario){
         return myRepository.findById(idUsuario).orElse(new Usuario());
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @Override
     public List<Usuario> list() {
         return myRepository.findAll();

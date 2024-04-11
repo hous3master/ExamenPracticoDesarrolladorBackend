@@ -12,7 +12,7 @@ public class Vendedor {
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private int idVendedor;
 
-@Column(name = "nombreCompleto", nullable = false)
+@Column(name = "nombreCompleto")
 private String nombreCompleto;
 
 public Vendedor() { }

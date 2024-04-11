@@ -13,25 +13,26 @@ public class FormaPagoServiceImplement implements IFormaPagoService {
     @Autowired
     private IFormaPagoRepository myRepository;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @Override
     public void insert(FormaPago FormaPago) {
         myRepository.save(FormaPago);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @Override
     public void delete(int idFormaPago){
         myRepository.deleteById(idFormaPago);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @Override
     public FormaPago listId(int idFormaPago){
         return myRepository.findById(idFormaPago).orElse(new FormaPago());
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @Override
     public List<FormaPago> list() {
         return myRepository.findAll();

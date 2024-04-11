@@ -13,25 +13,26 @@ public class EstadoPedidoServiceImplement implements IEstadoPedidoService {
     @Autowired
     private IEstadoPedidoRepository myRepository;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @Override
     public void insert(EstadoPedido EstadoPedido) {
         myRepository.save(EstadoPedido);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @Override
     public void delete(int idEstadoPedido){
         myRepository.deleteById(idEstadoPedido);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @Override
     public EstadoPedido listId(int idEstadoPedido){
         return myRepository.findById(idEstadoPedido).orElse(new EstadoPedido());
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @Override
     public List<EstadoPedido> list() {
         return myRepository.findAll();

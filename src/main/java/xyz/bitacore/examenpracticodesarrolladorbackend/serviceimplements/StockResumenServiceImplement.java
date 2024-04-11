@@ -13,25 +13,26 @@ public class StockResumenServiceImplement implements IStockResumenService {
     @Autowired
     private IStockResumenRepository myRepository;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @Override
     public void insert(StockResumen StockResumen) {
         myRepository.save(StockResumen);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @Override
     public void delete(int idStockResumen){
         myRepository.deleteById(idStockResumen);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @Override
     public StockResumen listId(int idStockResumen){
         return myRepository.findById(idStockResumen).orElse(new StockResumen());
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @Override
     public List<StockResumen> list() {
         return myRepository.findAll();

@@ -13,25 +13,26 @@ public class SucursalServiceImplement implements ISucursalService {
     @Autowired
     private ISucursalRepository myRepository;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @Override
     public void insert(Sucursal Sucursal) {
         myRepository.save(Sucursal);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @Override
     public void delete(int idSucursal){
         myRepository.deleteById(idSucursal);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @Override
     public Sucursal listId(int idSucursal){
         return myRepository.findById(idSucursal).orElse(new Sucursal());
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @Override
     public List<Sucursal> list() {
         return myRepository.findAll();

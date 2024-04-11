@@ -12,28 +12,28 @@ public class OrdenPedido {
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private int idOrdenPedido;
 
-@Column(name = "codigo", nullable = false)
+@Column(name = "codigo")
 private String codigo;
 
-@Column(name = "diasCredito", nullable = false)
+@Column(name = "diasCredito")
 private int diasCredito;
 
-@Column(name = "observaciones", nullable = false)
+@Column(name = "observaciones")
 private String observaciones;
 
-@Column(name = "fechaEmision", nullable = false)
+@Column(name = "fechaEmision")
 private LocalDate fechaEmision;
 
-@Column(name = "totalGravado", nullable = false)
+@Column(name = "totalGravado")
 private double totalGravado;
 
-@Column(name = "totalGV", nullable = false)
-private double totalGV;
+@Column(name = "totalIGV")
+private double totalIGV;
 
-@Column(name = "total", nullable = false)
+@Column(name = "total")
 private double total;
 
-@Column(name = "fechaVencimiento", nullable = false)
+@Column(name = "fechaVencimiento")
 private LocalDate fechaVencimiento;
 
 @ManyToOne
@@ -58,14 +58,14 @@ private Cliente cliente;
 
 public OrdenPedido() { }
 
-public OrdenPedido(int idOrdenPedido,String codigo, int diasCredito, String observaciones, LocalDate fechaEmision, double totalGravado, double totalGV, double total, LocalDate fechaVencimiento, Vendedor vendedor, FormaPago formaPago, Sucursal sucursal, EstadoPedido estadoPedido, Cliente cliente) {
+public OrdenPedido(int idOrdenPedido,String codigo, int diasCredito, String observaciones, LocalDate fechaEmision, double totalGravado, double totalIGV, double total, LocalDate fechaVencimiento, Vendedor vendedor, FormaPago formaPago, Sucursal sucursal, EstadoPedido estadoPedido, Cliente cliente) {
     this.idOrdenPedido = idOrdenPedido;
     this.codigo = codigo;
     this.diasCredito = diasCredito;
     this.observaciones = observaciones;
     this.fechaEmision = fechaEmision;
     this.totalGravado = totalGravado;
-    this.totalGV = totalGV;
+    this.totalIGV = totalIGV;
     this.total = total;
     this.fechaVencimiento = fechaVencimiento;
     this.vendedor = vendedor;
@@ -75,116 +75,115 @@ public OrdenPedido(int idOrdenPedido,String codigo, int diasCredito, String obse
     this.cliente = cliente;
 }
 
-public int getIdOrdenPedido() {
-    return idOrdenPedido;
-}
+    public int getIdOrdenPedido() {
+        return idOrdenPedido;
+    }
 
-public void setIdOrdenPedido(int idOrdenPedido) {
-    this.idOrdenPedido = idOrdenPedido;
-}
+    public void setIdOrdenPedido(int idOrdenPedido) {
+        this.idOrdenPedido = idOrdenPedido;
+    }
 
-public String getCodigo() {
-    return codigo;
-}
+    public String getCodigo() {
+        return codigo;
+    }
 
-public void setCodigo(String codigo) {
-    this.codigo = codigo;
-}
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
 
-public int getDiascredito() {
-    return diasCredito;
-}
+    public int getDiasCredito() {
+        return diasCredito;
+    }
 
-public void setDiascredito(int diasCredito) {
-    this.diasCredito = diasCredito;
-}
+    public void setDiasCredito(int diasCredito) {
+        this.diasCredito = diasCredito;
+    }
 
-public String getObservaciones() {
-    return observaciones;
-}
+    public String getObservaciones() {
+        return observaciones;
+    }
 
-public void setObservaciones(String observaciones) {
-    this.observaciones = observaciones;
-}
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
 
-public LocalDate getFechaemision() {
-    return fechaEmision;
-}
+    public LocalDate getFechaEmision() {
+        return fechaEmision;
+    }
 
-public void setFechaemision(LocalDate fechaEmision) {
-    this.fechaEmision = fechaEmision;
-}
+    public void setFechaEmision(LocalDate fechaEmision) {
+        this.fechaEmision = fechaEmision;
+    }
 
-public double getTotalgravado() {
-    return totalGravado;
-}
+    public double getTotalGravado() {
+        return totalGravado;
+    }
 
-public void setTotalgravado(double totalGravado) {
-    this.totalGravado = totalGravado;
-}
+    public void setTotalGravado(double totalGravado) {
+        this.totalGravado = totalGravado;
+    }
 
-public double getTotalgv() {
-    return totalGV;
-}
+    public double getTotalIGV() {
+        return totalIGV;
+    }
 
-public void setTotalgv(double totalGV) {
-    this.totalGV = totalGV;
-}
+    public void setTotalIGV(double totalIGV) {
+        this.totalIGV = totalIGV;
+    }
 
-public double getTotal() {
-    return total;
-}
+    public double getTotal() {
+        return total;
+    }
 
-public void setTotal(double total) {
-    this.total = total;
-}
+    public void setTotal(double total) {
+        this.total = total;
+    }
 
-public LocalDate getFechavencimiento() {
-    return fechaVencimiento;
-}
+    public LocalDate getFechaVencimiento() {
+        return fechaVencimiento;
+    }
 
-public void setFechavencimiento(LocalDate fechaVencimiento) {
-    this.fechaVencimiento = fechaVencimiento;
-}
+    public void setFechaVencimiento(LocalDate fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
 
-public Vendedor getVendedor() {
-    return vendedor;
-}
+    public Vendedor getVendedor() {
+        return vendedor;
+    }
 
-public void setVendedor(Vendedor vendedor) {
-    this.vendedor = vendedor;
-}
+    public void setVendedor(Vendedor vendedor) {
+        this.vendedor = vendedor;
+    }
 
-public FormaPago getFormaPago() {
-    return formaPago;
-}
+    public FormaPago getFormaPago() {
+        return formaPago;
+    }
 
-public void setFormaPago(FormaPago formaPago) {
-    this.formaPago = formaPago;
-}
+    public void setFormaPago(FormaPago formaPago) {
+        this.formaPago = formaPago;
+    }
 
-public Sucursal getSucursal() {
-    return sucursal;
-}
+    public Sucursal getSucursal() {
+        return sucursal;
+    }
 
-public void setSucursal(Sucursal sucursal) {
-    this.sucursal = sucursal;
-}
+    public void setSucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
+    }
 
-public EstadoPedido getEstadoPedido() {
-    return estadoPedido;
-}
+    public EstadoPedido getEstadoPedido() {
+        return estadoPedido;
+    }
 
-public void setEstadoPedido(EstadoPedido estadoPedido) {
-    this.estadoPedido = estadoPedido;
-}
+    public void setEstadoPedido(EstadoPedido estadoPedido) {
+        this.estadoPedido = estadoPedido;
+    }
 
-public Cliente getCliente() {
-    return cliente;
-}
+    public Cliente getCliente() {
+        return cliente;
+    }
 
-public void setCliente(Cliente cliente) {
-    this.cliente = cliente;
-}
-
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
 }

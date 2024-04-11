@@ -13,25 +13,26 @@ public class OrdenPedidoItemsServiceImplement implements IOrdenPedidoItemsServic
     @Autowired
     private IOrdenPedidoItemsRepository myRepository;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @Override
     public void insert(OrdenPedidoItems OrdenPedidoItems) {
         myRepository.save(OrdenPedidoItems);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @Override
     public void delete(int idOrdenPedidoItems){
         myRepository.deleteById(idOrdenPedidoItems);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @Override
     public OrdenPedidoItems listId(int idOrdenPedidoItems){
         return myRepository.findById(idOrdenPedidoItems).orElse(new OrdenPedidoItems());
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @Override
     public List<OrdenPedidoItems> list() {
         return myRepository.findAll();

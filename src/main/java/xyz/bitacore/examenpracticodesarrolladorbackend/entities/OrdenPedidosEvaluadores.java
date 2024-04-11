@@ -12,13 +12,13 @@ public class OrdenPedidosEvaluadores {
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private int idOrdenPedidosEvaluadores;
 
-@Column(name = "fechaEvaluacion", nullable = false)
+@Column(name = "fechaEvaluacion")
 private LocalDate fechaEvaluacion;
 
-@Column(name = "comentarios", nullable = false)
+@Column(name = "comentarios")
 private String comentarios;
 
-@Column(name = "resultado", nullable = false)
+@Column(name = "resultado")
 private String resultado;
 
 @ManyToOne

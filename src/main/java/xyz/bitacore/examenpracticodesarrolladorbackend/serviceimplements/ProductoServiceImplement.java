@@ -13,25 +13,26 @@ public class ProductoServiceImplement implements IProductoService {
     @Autowired
     private IProductoRepository myRepository;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @Override
     public void insert(Producto Producto) {
         myRepository.save(Producto);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @Override
     public void delete(int idProducto){
         myRepository.deleteById(idProducto);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @Override
     public Producto listId(int idProducto){
         return myRepository.findById(idProducto).orElse(new Producto());
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @Override
     public List<Producto> list() {
         return myRepository.findAll();

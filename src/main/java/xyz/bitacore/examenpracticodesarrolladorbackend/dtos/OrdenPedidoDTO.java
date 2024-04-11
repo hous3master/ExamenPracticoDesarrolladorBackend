@@ -10,7 +10,7 @@ public class OrdenPedidoDTO {
     private String observaciones;
     private LocalDate fechaEmision;
     private double totalGravado;
-    private double totalGV;
+    private double totalIGV;
     private double total;
     private LocalDate fechaVencimiento;
     private Vendedor vendedor;
@@ -67,12 +67,12 @@ public class OrdenPedidoDTO {
         this.totalGravado = totalGravado;
     }
 
-    public double getTotalgv() {
-        return totalGV;
+    public double getTotalIGV() {
+        return totalIGV;
     }
 
-    public void setTotalgv(double totalGV) {
-        this.totalGV = totalGV;
+    public void setTotalIGV(double totalIGV) {
+        this.totalIGV = totalIGV;
     }
 
     public double getTotal() {

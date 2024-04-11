@@ -13,25 +13,26 @@ public class OrdenPedidoServiceImplement implements IOrdenPedidoService {
     @Autowired
     private IOrdenPedidoRepository myRepository;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @Override
     public void insert(OrdenPedido OrdenPedido) {
         myRepository.save(OrdenPedido);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @Override
     public void delete(int idOrdenPedido){
         myRepository.deleteById(idOrdenPedido);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @Override
     public OrdenPedido listId(int idOrdenPedido){
         return myRepository.findById(idOrdenPedido).orElse(new OrdenPedido());
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @Override
     public List<OrdenPedido> list() {
         return myRepository.findAll();

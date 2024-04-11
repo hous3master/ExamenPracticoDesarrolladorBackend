@@ -17,19 +17,19 @@ public class StockResumenDTO {
         this.idStockResumen = idStockResumen;
     }
 
-    public int getCantidaddisponible() {
+    public int getCantidadDisponible() {
         return cantidadDisponible;
     }
 
-    public void setCantidaddisponible(int cantidadDisponible) {
+    public void setCantidadDisponible(int cantidadDisponible) {
         this.cantidadDisponible = cantidadDisponible;
     }
 
-    public int getCantidadenpedido() {
+    public int getCantidadEnPedido() {
         return cantidadEnPedido;
     }
 
-    public void setCantidadenpedido(int cantidadEnPedido) {
+    public void setCantidadEnPedido(int cantidadEnPedido) {
         this.cantidadEnPedido = cantidadEnPedido;
     }
 
@@ -48,5 +48,4 @@ public class StockResumenDTO {
     public void setSucursal(Sucursal sucursal) {
         this.sucursal = sucursal;
     }
-
 }

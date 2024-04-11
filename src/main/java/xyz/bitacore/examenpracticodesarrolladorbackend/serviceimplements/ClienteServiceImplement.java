@@ -13,25 +13,26 @@ public class ClienteServiceImplement implements IClienteService {
     @Autowired
     private IClienteRepository myRepository;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @Override
     public void insert(Cliente Cliente) {
         myRepository.save(Cliente);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @Override
     public void delete(int idCliente){
         myRepository.deleteById(idCliente);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @Override
     public Cliente listId(int idCliente){
         return myRepository.findById(idCliente).orElse(new Cliente());
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @Override
     public List<Cliente> list() {
         return myRepository.findAll();

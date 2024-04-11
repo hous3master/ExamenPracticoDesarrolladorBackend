@@ -8,6 +8,7 @@ public class OrdenPedidoItemsDTO {
     private double precioUnitario;
     private double subTotal;
     private Producto producto;
+    private OrdenPedido ordenPedido;
 
     public int getIdOrdenPedidoItems() {
         return idOrdenPedidoItems;
@@ -25,19 +26,19 @@ public class OrdenPedidoItemsDTO {
         this.cantidad = cantidad;
     }
 
-    public double getPreciounitario() {
+    public double getPrecioUnitario() {
         return precioUnitario;
     }
 
-    public void setPreciounitario(double precioUnitario) {
+    public void setPrecioUnitario(double precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
 
-    public double getSubtotal() {
+    public double getSubTotal() {
         return subTotal;
     }
 
-    public void setSubtotal(double subTotal) {
+    public void setSubTotal(double subTotal) {
         this.subTotal = subTotal;
     }
 
@@ -49,4 +50,11 @@ public class OrdenPedidoItemsDTO {
         this.producto = producto;
     }
 
+    public OrdenPedido getOrdenPedido() {
+        return ordenPedido;
+    }
+
+    public void setOrdenPedido(OrdenPedido ordenPedido) {
+        this.ordenPedido = ordenPedido;
+    }
 }

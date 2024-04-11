@@ -13,25 +13,26 @@ public class VendedorServiceImplement implements IVendedorService {
     @Autowired
     private IVendedorRepository myRepository;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @Override
     public void insert(Vendedor Vendedor) {
         myRepository.save(Vendedor);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @Override
     public void delete(int idVendedor){
         myRepository.deleteById(idVendedor);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @Override
     public Vendedor listId(int idVendedor){
         return myRepository.findById(idVendedor).orElse(new Vendedor());
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @Override
     public List<Vendedor> list() {
         return myRepository.findAll();

@@ -12,7 +12,7 @@ public class Producto {
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private int idProducto;
 
-@Column(name = "descripcion", nullable = false)
+@Column(name = "descripcion")
 private String descripcion;
 
 public Producto() { }

@@ -17,7 +17,8 @@ public class OrdenPedidosEvaluadoresController {
     @Autowired
     private IOrdenPedidosEvaluadoresService myService;
 
-    // Add an item to table
+    // ======= CRUD =======
+    // Crear
     @PostMapping
     public void registrar(@RequestBody OrdenPedidosEvaluadoresDTO dto) {
         ModelMapper m = new ModelMapper();
@@ -25,13 +26,13 @@ public class OrdenPedidosEvaluadoresController {
         myService.insert(myItem);
     }
 
-    // Delete an item by ID on table
+    // Eliminar por ID
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable("id")Integer id){
         myService.delete(id);
     }
 
-    // Retrieve an items by ID from table
+    // Leer por ID
     @GetMapping("/{id}")
     public OrdenPedidosEvaluadoresDTO listarId(@PathVariable("id")Integer id){
         ModelMapper m = new ModelMapper();
@@ -39,7 +40,7 @@ public class OrdenPedidosEvaluadoresController {
         return myItem;
     }
 
-    // Retrieve all items from table
+    // Leer toda la tabla
     @GetMapping
     public List<OrdenPedidosEvaluadoresDTO> listar(){
         return myService.list().stream().map(x -> {
@@ -48,7 +49,7 @@ public class OrdenPedidosEvaluadoresController {
         }).collect(Collectors.toList());
     }
 
-    // (Exclusive to controller) Modify values on table
+    // Actualizar por ID
     @PutMapping
     public void modificar(@RequestBody OrdenPedidosEvaluadoresDTO dto) {
         ModelMapper m = new ModelMapper();

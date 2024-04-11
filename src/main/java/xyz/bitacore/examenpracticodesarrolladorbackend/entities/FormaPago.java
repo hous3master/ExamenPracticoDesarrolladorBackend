@@ -10,7 +10,7 @@ public class FormaPago {
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private int idFormaPago;
 
-@Column(name = "descripcion", nullable = false)
+@Column(name = "descripcion")
 private String descripcion;
 
 public FormaPago() { }

@@ -12,7 +12,7 @@ public class Sucursal {
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 private int idSucursal;
 
-@Column(name = "descripcion", nullable = false)
+@Column(name = "descripcion")
 private String descripcion;
 
 public Sucursal() { }
