@@ -27,20 +27,121 @@ public class OrdenPedidoController {
 
     @Autowired
     private IOrdenPedidoItemsRepository ordenPedidoItemsRepository;
-
     @Autowired
     private IProductoRepository productoRepository;
-
     @Autowired
     private ISucursalRepository sucursalRepository;
-
     @Autowired
     private IStockResumenRepository stockResumenRepository;
-
     @Autowired
     private IOrdenPedidoRepository ordenPedidoRepository;
     @Autowired
     private IOrdenPedidosEvaluadoresRepository ordenPedidosEvaluadoresRepository;
+    @Autowired
+    private IUsuarioRepository usuarioRepository;
+
+    // Evaluar un pedido
+    @PutMapping("/evaluar-pedido/{id-usuario}")
+    public void evaluarPedido(@PathVariable("id-usuario") int idUsuario, @RequestParam int idOrdenPedido, @RequestParam String resultado, @RequestBody(required = false) String comentarios) {
+        // Validar que el usuario exista
+        if (usuarioRepository.existsById(idUsuario) == false) {
+            throw new IllegalArgumentException("El usuario no existe");
+        }
+
+        // Obtener la lista de todas orden de pedido
+        OrdenPedido ordenPedido = myService.listId(idOrdenPedido);
+
+        // Validar que la orden de pedido exista
+        if (ordenPedido == null) {
+            throw new IllegalArgumentException("La orden de pedido no existe");
+        }
+
+        // Validar que el estado del pedido sea "2"="Pendiente de evaluación"
+        if (ordenPedido.getEstadoPedido().getIdEstadoPedido() != 2) {
+            throw new IllegalArgumentException("El estado del pedido debe ser 'Pendiente de evaluación'");
+        }
+
+        // Validar que el usuario tenga autoridad para evaluar la orden de pedido
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(new Usuario());
+        if (ordenPedido.getTotal() >= 1 && ordenPedido.getTotal() <= 5000) {
+            if (usuario.getIdUsuario() < 1 || usuario.getIdUsuario() > 3) {
+                throw new SecurityException("El usuario no tiene autoridad para evaluar la orden de pedido");
+            }
+        } else if (ordenPedido.getTotal() > 5000 && ordenPedido.getTotal() <= 10000) {
+            if (usuario.getIdUsuario() < 4 || usuario.getIdUsuario() > 5) {
+                throw new SecurityException("El usuario no tiene autoridad para evaluar la orden de pedido");
+            }
+        } else if (ordenPedido.getTotal() > 10000) {
+            if (usuario.getIdUsuario() < 6 || usuario.getIdUsuario() > 7) {
+                throw new SecurityException("El usuario no tiene autoridad para evaluar la orden de pedido");
+            }
+        }
+
+        // Validar que el resultado sea "Aprobado" o "Desaprobado"
+        if (!resultado.equals("Aprobado") && !resultado.equals("Desaprobado")) {
+            throw new IllegalArgumentException("El resultado debe ser 'Aprobado' o 'Desaprobado'");
+        }
+
+        // Obtener la orden de pedido evaluadores
+        OrdenPedidosEvaluadores ordenPedidosEvaluadores = ordenPedidosEvaluadoresRepository.findByOrdenPedidoAndUsuario(ordenPedido, usuario);
+        // Asignar resultado a orden pedido evaluadores
+        ordenPedidosEvaluadores.setResultado(resultado);
+        // Aisgnar fecha de evaluacion actual a orden pedido evaluadores
+        ordenPedidosEvaluadores.setFechaevaluacion(LocalDate.now());
+        // Asignar comentarios a orden pedido evaluadores
+        ordenPedidosEvaluadores.setComentarios(comentarios);
+        // Guardar orden de pedido evaluadores en DB
+        ordenPedidosEvaluadoresRepository.save(ordenPedidosEvaluadores);
+
+        // Si el total de la orden de pedido es menor o igual a 10000
+        if (ordenPedido.getTotal() <= 10000) {
+            // Si el resultado es aprobado, asignar el estado de la misma orden a "3"="Aprobado"
+            if (resultado.equals("Aprobado")) {
+                EstadoPedido estadoPedido = new EstadoPedido();
+                estadoPedido.setIdEstadoPedido(3);
+                ordenPedido.setEstadoPedido(estadoPedido);
+                myService.insert(ordenPedido);
+
+                // Enviar un correo a cfmorenofernandez@gmail.com
+
+            }
+            // Si es desaprobado, asignar el estado de la misma orden a "4"="Desaprobado"
+            if (resultado.equals("Desaprobado")) {
+                EstadoPedido estadoPedido = new EstadoPedido();
+                estadoPedido.setIdEstadoPedido(4);
+                ordenPedido.setEstadoPedido(estadoPedido);
+                myService.insert(ordenPedido);
+            }
+        }
+
+        // Si es > 10000
+        if (ordenPedido.getTotal() > 10000) {
+            // Si es desaprobado
+            if (resultado.equals("Desaprobado")) {
+                // Asignar el estado de la misma orden a "4"="Desaprobado"
+                EstadoPedido estadoPedido = new EstadoPedido();
+                estadoPedido.setIdEstadoPedido(4);
+                ordenPedido.setEstadoPedido(estadoPedido);
+                myService.insert(ordenPedido);
+            }
+            // Si es aprobado
+            if (resultado.equals("Aprobado")) {
+                // Paso 1: Obtener la lista de ordenes de pedido evaluadores
+                List<OrdenPedidosEvaluadores> OrdenPedidosEvaluadoresList = ordenPedidosEvaluadoresRepository.findAllByOrdenPedido(ordenPedido);
+
+                // Paso 2: Filtrar la lista de ordenes de pedido evaluadores por resultado "Aprobado"
+                List<OrdenPedidosEvaluadores> OrdenPedidosEvaluadoresListFiltrada = OrdenPedidosEvaluadoresList.stream().filter(x -> x.getResultado().equals("Aprobado")).toList();
+
+                // Si ya hay un aprobado, asignar el estado de la misma orden a "3"="Aprobado"
+                if (!OrdenPedidosEvaluadoresListFiltrada.isEmpty()) {
+                    EstadoPedido estadoPedido = new EstadoPedido();
+                    estadoPedido.setIdEstadoPedido(3);
+                    ordenPedido.setEstadoPedido(estadoPedido);
+                    myService.insert(ordenPedido);
+                }
+            }
+        }
+    }
 
     // Listar los pedidos pendientes de evaluacion (id estado es 2) filtrando por el usuario evaluador
     @GetMapping("/listar-pedidos-pendientes-evaluacion-por-evaluador/{id-usuario}")
@@ -64,7 +165,7 @@ public class OrdenPedidoController {
     }
 
     // Cambiar el estado de un pedido en Borrador a “Pendiente Evaluacion”
-    @PatchMapping("/actualizar-estado-pendiente-evaluacion/{id-orden-pedido}")
+    @PutMapping("/actualizar-estado-pendiente-evaluacion/{id-orden-pedido}")
     public void cambiarEstado(@PathVariable("id-orden-pedido")Integer idOrdenPedido){
         // Validar que la orden de pedido exista
         if (ordenPedidoRepository.existsOrdenPedidoByIdOrdenPedido(idOrdenPedido) == false) {
@@ -79,42 +180,46 @@ public class OrdenPedidoController {
             throw new IllegalArgumentException("El estado del pedido solo puede ser cambiado si es 'Borrador'");
         }
 
-        // Crear orden de pedido evaluadores
-        OrdenPedidosEvaluadores ordenPedidosEvaluadores = new OrdenPedidosEvaluadores();
-        Usuario usuario = new Usuario();
+        // Iterar cada usuario con autoridad para evaluar la orden de pedido
+        // Paso 1: Obtener la lista de todos los usuarios
+        List<Usuario> listaUsuarios = usuarioRepository.findAll();
+        // Paso 2: Filtrar la lista de usuarios segun el nivel de autoridad requerido por la orden
+        List<Usuario> listaUsuariosFiltrada = listaUsuarios.stream().filter(x -> {
+            if (ordenPedido.getTotal() >= 1 && ordenPedido.getTotal() <= 5000) {
+                return x.getIdUsuario() >= 1 && x.getIdUsuario() <= 3;
+            } else if (ordenPedido.getTotal() > 5000 && ordenPedido.getTotal() <= 10000) {
+                return x.getIdUsuario() >= 4 && x.getIdUsuario() <= 5;
+            } else if (ordenPedido.getTotal() > 10000) {
+                return x.getIdUsuario() >= 6 && x.getIdUsuario() <= 7;
+            }
+            return false;
+        }).toList();
 
-        // Asignar id de la orden de pedido y el usuario correspondiente (asignado aleatoriamente) en orden de pedido evaluadores
-        // Paso 1: Calcular el usuario
-        /*
-        IdUsuario	Nombre  Rango de importe total en la orden
-        1	Marco Silverio 1-5000
-        2	Luis Almeyda  1-5000
-        3	Ivan Moran 1-5000
-        4	Ibarra   5001-10000
-        5	Perlacios   5001-10000
-        6	Ortiz   > 10000
-        7	Eche    > 10000
-        */
-        if (ordenPedido.getTotal() >= 1 && ordenPedido.getTotal() <= 5000) {
-            usuario.setIdUsuario(1 + (int)(Math.random() * 3));
-        } else if (ordenPedido.getTotal() >= 5001 && ordenPedido.getTotal() <= 10000) {
-            usuario.setIdUsuario(4 + (int)(Math.random() * 2));
-        } else if (ordenPedido.getTotal() > 10000) {
-            usuario.setIdUsuario(6 + (int)(Math.random() * 2));
+        // Para cada usuario autorizado
+        for (Usuario usuario : listaUsuariosFiltrada) {
+            // Crear orden de pedido evaluadores
+            OrdenPedidosEvaluadores ordenPedidosEvaluadores = new OrdenPedidosEvaluadores();
+
+            // Asignar el usuario evaluador segun el nivel de autoridad requerido por la orden
+            ordenPedidosEvaluadores.setUsuario(usuario);
+
+            // Asignar la orden de pedido a orden de pedido evaluadores
+            ordenPedidosEvaluadores.setOrdenPedido(ordenPedido);
+
+            // Asignar "Sin Respuesta" a resultado en orden de pedido evaluadores
+            ordenPedidosEvaluadores.setResultado("Sin Respuesta");
+
+            // Guardar orden de pedido evaluadores en DB
+            ordenPedidosEvaluadoresRepository.save(ordenPedidosEvaluadores);
         }
-        ordenPedidosEvaluadores.setUsuario(usuario);
-
-        // Asignar la orden de pedido a orden de pedido evaluadores
-        ordenPedidosEvaluadores.setOrdenPedido(ordenPedido);
 
         // Asignar el estado de la orden de pedido a "2"="Pendiente de evaluación"
         EstadoPedido estadoPedido = new EstadoPedido();
         estadoPedido.setIdEstadoPedido(2);
         ordenPedido.setEstadoPedido(estadoPedido);
 
-        // Guardar en DB
+        // Guardar orden de pedido en DB
         myService.insert(ordenPedido);
-        ordenPedidosEvaluadoresRepository.save(ordenPedidosEvaluadores);
     }
 
     // Registrar una orden de pedido con los items asociados
